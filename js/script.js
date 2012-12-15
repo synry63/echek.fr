@@ -1,79 +1,73 @@
-
 /**
-* FONCTION QUI PERMET D'AFFICHER UN LOG DANS LA CONSOLE JAVASCRIPT
+ * FONCTION QUI PERMET D'AFFICHER UN LOG DANS LA CONSOLE JAVASCRIPT
 **/
 function log(msg){
 	console.log(msg);
 }
 
 /**
-<<<<<<< HEAD
-* VARIABLES POUR LE JEUX
-=======
-* VARIABLE GLOBALES POUR LE JEUX
->>>>>>> 0cd72aa2b6db857880f9e8c3bb409b9f70b1f93f
+ * VARIABLES POUR LE JEUX
 **/
 var canvas;
 var ctx;
 
 /**
-<<<<<<< HEAD
-* VARIABLES GLOBALES POUR LE JEUX
+ * VARIABLES GLOBALES POUR LE JEUX
 **/
 var CANVAS_WIDTH = document.getElementById('canvas').width;
 var CANVAS_HEIGHT = document.getElementById('canvas').height;
+var c = 0;
 
 /**
-* VARIABLE GLOBALES POUR LA GRILLE DU JEUX
+ * VARIABLE GLOBALES POUR LA GRILLE DU JEUX
 **/
-var RECT_GRID_HEIGHT = 25;
-var RECT_GRID_WIDTH = 25;
-var FIRST_X = 0;
-var FIRST_Y = 0;
-var SPACE = 10;
-var PER_ROW = 40;
-var PER_COL = 20;
+var RECT_GRID_HEIGHT = 60;
+var RECT_GRID_WIDTH = 60;
+var PER_ROW = 20;
+var PER_COL = 10;
 var X, Y;
-=======
-* VARIABLE GLOBALES POUR LE GRILLE DU JEUX
-**/
-var GRID_HEIGHT = 50;
-var GRID_WIDTH = 50;
 var FIRST_X = 0;
 var FIRST_Y = 0;
->>>>>>> 0cd72aa2b6db857880f9e8c3bb409b9f70b1f93f
+var COLORS = ["#503A22", "#88502F", "#A17048", "#D9C38A", "#F7DDAC", "#503A22", "#88502F", "#A17048", "#D9C38A", "#F7DDAC", "#503A22", "#88502F", "#A17048", "#D9C38A", "#F7DDAC", "#D9C38A", "#503A22", "#D9C38A", "#000000", "#FFFFFF"];
+var GRIDS = [];
 
 /**
-* TRAITEMENT LORSQUE LA PAGE EST CHARGÉ
+ * TRAITEMENT LORSQUE LA PAGE EST CHARGÉ
 **/
 window.addEventListener('load', function(){
 
-<<<<<<< HEAD
 	/**
-	* ON RECUPÈRE LE CANVAS PUIS ON AJOUTE LES RECTANGLES POUR LA GRILLE
+	 * ON RECUPÈRE LE CANVAS PUIS ON AJOUTE LES RECTANGLES POUR LA GRILLE
 	**/
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
-	
-	ctx.fillStyle = 'yellow';
 	
 	for( var i = 0; i < PER_ROW; i++ ){
 		for( var j = 0; j < PER_COL; j++ ){
 			X = (i == 0) ? FIRST_X : (RECT_GRID_WIDTH*i);
 			Y = (j == 0) ? FIRST_Y : (RECT_GRID_HEIGHT*j);
-			//log('x : '+X+' ---- y : '+Y);
-			var obj = ctx.fillRect(X, Y, RECT_GRID_WIDTH, RECT_GRID_HEIGHT);	
+            ctx.fillStyle = COLORS[Math.floor(Math.random()*18)];
+			var obj = ctx.fillRect(X, Y, RECT_GRID_WIDTH, RECT_GRID_HEIGHT);
+            GRIDS[c] = obj;
+            c++;
 		}
 	}
-=======
-	canvas = document.getElementById('canvas');
 
-	ctx = canvas.getContext('2d');
-
-
-	ctx.fillStyle = 'black';
-	ctx.fillRect(FIRST_X, FIRST_Y, GRID_WIDTH, GRID_HEIGHT);
->>>>>>> 0cd72aa2b6db857880f9e8c3bb409b9f70b1f93f
+    /**
+     * ON AJOUTE LE MENU SUR LA CARTE
+    **/
+    /**
+     * ON AJOUT EN PREMIER LE FOND DU MENU
+    **/
+    /*ctx.fillStyle = 'white';
+    ctx.shadowColor = 'black';
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.fillRect((CANVAS_WIDTH-500)/2, (CANVAS_HEIGHT-200)/2, 500, 200);*/
+    /**
+     * ENSUITE LES MENUS DU JEUX
+    **/
 
 
 }, false);

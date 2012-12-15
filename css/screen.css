@@ -67,16 +67,18 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
-/* line 10, ../sass/screen.scss */
+/* line 11, ../sass/screen.scss */
 html, body {
   height: 100%;
   width: 100%;
+  background-image: url(../images/bgBody.png);
+  backgrond-repeat: repeat;
 }
-/* line 13, ../sass/screen.scss */
+/* line 16, ../sass/screen.scss */
 html canvas, body canvas {
   position: absolute;
   background-color: #4a9143;
   left: 50%;
   top: 50%;
-  margin: -250px 0 0 -500px;
+  margin: -300px 0 0 -600px;
 }
