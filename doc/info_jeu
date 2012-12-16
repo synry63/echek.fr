@@ -1,0 +1,38 @@
+theme : medieval type : age of empire 3
+personnages : 
+	nom :  chevalier rang 1
+	type : corp à corp/physique
+	arme : épée longue/bouclier
+	desc : infanterie basic de l'armé
+	deplacement : 2 cases
+	capacite special : NA
+
+        nom :  archer d'élite
+        type : distance/physique
+        arme : arc long
+        desc : unité spécialisé dans les attaques longues portée
+        deplacement : 1 case
+        capacite special : NA
+
+        nom :  paladin
+        type : corp à corp/physique/magique
+        arme : épée longue/livre
+        desc : un chevalier capable de se déplacé rapidement grace a sa montur il est également capable de soutenir ses allié avec ses sort
+        deplacement : 5 case
+        capacite special : soins
+
+	nom :  rodeur
+        type : corp à corp/mi-distance/physique/
+        arme : épee courte/arbalète
+        desc : ce guerrier de l'ombre est polyvalent. Il est capable d'attaqué au corp à corp et a mi distance grace a son arbalète de poing
+        deplacement : 2 case
+        capacite special : camouflage
+
+        nom :  chavalier dragon
+        type : corp à corp/phisique/magique
+        arme : lance
+        desc : ce puissant guerrier a fait un pacte avec les puissants dragon noir afin d'aquerir leur puissance. ils sont dévastateurs
+        deplacement : 3 case
+        capacite special : soufle emflamme
+
+
