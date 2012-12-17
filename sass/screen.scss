@@ -21,3 +21,18 @@ html, body{
 		margin: -300px 0 0 -600px;
 	}
 }
+
+div.sprite{
+	height: 40px;
+	width: 40px;
+	background-image: url(../images/sprites/baladin_sprite.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+}
+
+div.spritemov{
+	height: 40px;
+	width: 40px;
+	background-image: url(../images/sprites/sprite_baladin.gif);
+	background-repeat: no-repeat;
+}
