@@ -51,7 +51,6 @@ window.addEventListener('load', function(){
     setInterval(function() {
         map.dessinerMap(ctx);
     }, 40);
-	// test algo chemin
 	map.explore(0,0);
     /**
      * ON AJOUTE LE MENU SUR LA CARTE
