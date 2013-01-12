@@ -64,18 +64,18 @@ Map.prototype.getCase = function(coorX,coorY) {
     return null;
 }
 // test si le case demande est disponible pour un deplacement
-Map.prototype.isCaseDisponible = function(celule){
+    Map.prototype.isCaseDisponible = function(celule){
     var typeDecorsNumero = this.terrain[celule.x][celule.y];
     if(DECORS_NON_FRANCHISSABLE_NUM[''+typeDecorsNumero+'']){
         return false;
     }
-    for(var i = 0; i < this.personnages.length ; i++) {
+    /*for(var i = 0; i < this.personnages.length ; i++) {
         persoX = this.personnages[i].x;
         persoY = this.personnages[i].y;
         if(celule.x == persoX && celule.y == persoY){
             return false;
         }
-    }
+    }*/
     return true;
 }
 // recupere le personnage selectionne
@@ -104,7 +104,7 @@ Map.prototype.getTabDisponible = function(personnage){
             if(this.isCaseDisponible(celule)){
                 var test = this.terrain[j][i];
                 //arrayR.push(celule);
-                arrayR[''+celule.x+'_'+cellule.y+''] = true;
+                arrayR[''+celule.x+'_'+celule.y+''] = true;
             }
 
         }
@@ -113,24 +113,110 @@ Map.prototype.getTabDisponible = function(personnage){
 }
 // test algo chemin
 Map.prototype.getTabRoute = function(cases,personnage,caseDesti){
-    var directionPrincipal = '';
-    var arrayR = new Array();
-    var arrayDirection = new Array ('x','y');
-    var arrayDep = new Array (1,-1);
-   /* if(personnage.y>caseDesti.y){
-        directionPrincipal='haut';
-    }
-    else if(personnage.y<caseDesti.y){
-        directionPrincipal = 'bas';
-    }
-    var i = 0;
-    var j = 0;
-    var key = '';
-    while(key!=caseDesti.x+'_'+caseDesti.y){
+    var tabPoids = {};
+    var antecedant =  {};
+    var keyFinal = caseDesti.x+'_'+caseDesti.y;
+    var keyD = personnage.x+'_'+personnage.y;
+        for (var key in cases){
+          ///  antecedant[key] = {};
+            antecedant[key] = new Array();
 
-        var key = personnage.x+'_'+(personnage.y+1);
-        if(cases[key])
-    }*/
+            if(keyD==key)
+                tabPoids[key] = {'name':key,'poids':0,'parcouru':false};
+            else
+                tabPoids[key] = {'name':key,'poids':-1,'parcouru':false};
+        var coorNoeud = key.split('_');
+            coorNoeud[0] = parseInt(coorNoeud[0]);
+            coorNoeud[1] = parseInt(coorNoeud[1]);
+            var keyAnte = null;
+            // antecedant haut
+            if(cases[coorNoeud[0]+'_'+(coorNoeud[1]-1)]!=undefined){
+                keyAnte = coorNoeud[0]+'_'+(coorNoeud[1]-1);
+                antecedant[key].push(keyAnte);
+               // antecedant[key][keyAnte] = true;
+            }
+            // antecedant droite
+            if(cases[(coorNoeud[0]+1)+'_'+coorNoeud[1]]!=undefined){
+                keyAnte = (coorNoeud[0]+1)+'_'+coorNoeud[1];
+                antecedant[key].push(keyAnte);
+               // antecedant[key][keyAnte] = true;
+            }
+            // antecedant bas
+            if(cases[coorNoeud[0]+'_'+(coorNoeud[1]+1)]!=undefined){
+                keyAnte = coorNoeud[0]+'_'+(coorNoeud[1]+1);
+                antecedant[key].push(keyAnte);
+            //    antecedant[key][keyAnte] = true;
+            }
+            // antecedant gauche
+            if(cases[(coorNoeud[0]-1)+'_'+coorNoeud[1]]!=undefined){
+                keyAnte = (coorNoeud[0]-1)+'_'+coorNoeud[1];
+                antecedant[key].push(keyAnte);
+            //    antecedant[key][keyAnte] = true;
+            }
+
+        }
+    var trouve =false;
+    var key = keyD;
+    var i = 0;
+    var nextNoeud = new Array();
+    var test =  new Array();
+    var nouvKey = null;
+    while (key!=keyFinal){
+   // for (var key in tabPoids){
+        var antes = antecedant[key];
+        for(var i=0;i<antes.length;i++){
+            //var coorNoeud = k.split('_');
+           // coorNoeud[0] = parseInt(coorNoeud[0]);
+           // coorNoeud[1] = parseInt(coorNoeud[1]);
+           if(tabPoids[antes[i]].parcouru==false){
+                nouvKey = antes[i];
+           }
+          /*  // antecedant haut
+            if(cases[coorNoeud[0]+'_'+(coorNoeud[1]-1)]!=undefined){
+               // keyAnte = coorNoeud[0]+'_'+(coorNoeud[1]-1);
+               // tabPoids[keyAnte].parcouru = true;
+               // tabPoids[keyAnte].poids =  tabPoids[key].poids+1;
+                antecedant[k][key] = true;
+                nextNoeud.push(tabPoids[keyAnte]);
+
+            }
+            // antecedant droite
+            if(cases[(coorNoeud[0]+1)+'_'+coorNoeud[1]]!=undefined){
+              //  keyAnte = (coorNoeud[0]+1)+'_'+coorNoeud[1];
+              //  tabPoids[keyAnte].parcouru = true;
+              //  tabPoids[keyAnte].poids =  tabPoids[key].poids+1;
+                antecedant[k][key] = true;
+                nextNoeud.push(tabPoids[keyAnte]);
+            }
+            // antecedant bas
+            if(cases[coorNoeud[0]+'_'+(coorNoeud[1]+1)]!=undefined){
+             //   keyAnte = coorNoeud[0]+'_'+(coorNoeud[1]+1);
+             //   tabPoids[keyAnte].parcouru = true;
+             //   tabPoids[keyAnte].poids =  tabPoids[key].poids+1;
+                antecedant[k][key] = true;
+                nextNoeud.push(tabPoids[keyAnte]);
+            }
+            // antecedant gauche
+            if(cases[(coorNoeud[0]-1)+'_'+coorNoeud[1]]!=undefined){
+           //     keyAnte = (coorNoeud[0]-1)+'_'+coorNoeud[1];
+           //     tabPoids[keyAnte].parcouru = true;
+           //     tabPoids[keyAnte].poids =  tabPoids[key].poids+1;
+                antecedant[k][key] = true;
+                nextNoeud.push(tabPoids[keyAnte]);
+            }*/
+        }
+            tabPoids[key].parcouru = true;
+        var arr =  key.split('_');
+        test.push({'x' : arr[0], 'y' : arr[1]});
+        key = nouvKey;
+
+            // recupere le plus petit;
+
+
+    }
+    var arr =  keyFinal.split('_');
+    test.push({'x' : arr[0], 'y' : arr[1]});
+    return test;
 }
 n = 5;
 path = new Array(n);

@@ -81,5 +81,7 @@ Personnage.prototype.deplacer = function(caseTo) {
     if(this.etatAnimation >= 0) {
         return false;
     }
+   this.x = parseInt(caseTo.x);
+   this.y = parseInt(caseTo.y);
    return true;
 }

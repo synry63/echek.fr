@@ -1,5 +1,5 @@
 $(document).ready(function() {
-
+var Ii = 1;
     $('canvas').mousemove(function(e){
          cellule = map.getCase(e.pageX-$(this).offset().left,e.pageY-$(this).offset().top);
        var result = map.isCaseDisponible(cellule);
@@ -11,8 +11,9 @@ $(document).ready(function() {
             //    var perso = map.getPerso(cellule);
              //   if(perso!=null){
                     var celluleDispo = map.getTabDisponible(joueur);
-                    var celule =  {'x' : 8, 'y' : 12};
-                    map.getTabRoute(celluleDispo,joueur,celule);
+                    var celule =  {'x' : 8, 'y' : 13};
+                    arrayRoute = map.getTabRoute(celluleDispo,joueur,celule);
+
                  //   console.log(celluleDispo);
                // }
             //}
