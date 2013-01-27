@@ -5,13 +5,15 @@ var DIRECTION = {
     "HAUT"   : 3
 }
 
-var DUREE_ANIMATION = 3;
+var DUREE_ANIMATION = 5;
 var DUREE_DEPLACEMENT = 15;
 
 function Personnage(url, x, y, direction,id,nom,nbcase) {
     this.x = x; // (en cases)
     this.y = y; // (en cases)
     this.direction = direction;
+    this.maxDep = null;
+    this.nextDep = 0;
     this.etatAnimation = -1;
     this.nom = nom;
     this.id =id;
@@ -29,7 +31,12 @@ function Personnage(url, x, y, direction,id,nom,nbcase) {
     }
     this.image.src = "images/sprites/" + url;
 }
+Personnage.prototype.isDepAutorise = function(cases,desti) {
+    var key = desti.x+'_'+desti.y;
+    if(cases[key]!=undefined) return true;
 
+    return false;
+}
 Personnage.prototype.dessinerPersonnage = function(context) {
     var frame = 0; // Numero de l'image Ã  prendre pour l'animation
     var decalageX = 0, decalageY = 0; // Decalage a  appliquer a  la position du personnage
@@ -76,12 +83,83 @@ Personnage.prototype.dessinerPersonnage = function(context) {
     );
 }
 
-Personnage.prototype.deplacer = function(caseTo) {
-    // On ne peut pas se deplacer si un mouvement est deja  en cours !
-    if(this.etatAnimation >= 0) {
+Personnage.prototype.getCoordonneesAdjacentes = function(direction) {
+    var coord = {'x' : this.x, 'y' : this.y};
+    switch(direction) {
+        case DIRECTION.BAS :
+            coord.y++;
+            break;
+        case DIRECTION.GAUCHE :
+            coord.x--;
+            break;
+        case DIRECTION.DROITE :
+            coord.x++;
+            break;
+        case DIRECTION.HAUT :
+            coord.y--;
+            break;
+    }
+    return coord;
+}
+Personnage.prototype.getDirection = function(caseTo) {
+    caseTo.x = parseInt(caseTo.x);
+    caseTo.y = parseInt(caseTo.y);
+    var dirr = null;
+    if(caseTo.x<this.x){
+        dirr = DIRECTION.GAUCHE;
+    }
+    else if(caseTo.x>this.x){
+        dirr = DIRECTION.DROITE;
+    }
+    else if(caseTo.y>this.y){
+        dirr = DIRECTION.BAS;
+    }
+    else if(caseTo.y<this.y){
+        dirr = DIRECTION.HAUT;
+    }
+    return dirr;
+
+}
+Personnage.prototype.setNbDepAeffectuer = function(cases){
+    this.maxDep = cases.length-1;
+}
+Personnage.prototype.deplacement = function(cases){
+    if(this.etatAnimation >= 0 ) {
         return false;
     }
+    if(this.nextDep>this.maxDep){
+        clearInterval(idInterval);
+        this.nextDep = 0;
+        this.maxDep = null;
+        return false;
+    }
+    this.deplacer(cases[this.nextDep]);
+    this.nextDep++;
+
+}
+Personnage.prototype.deplacer = function(caseTo) {
+
+    // On commence l'animation
+   this.etatAnimation = 1;
+   this.direction = this.getDirection(caseTo);
    this.x = parseInt(caseTo.x);
    this.y = parseInt(caseTo.y);
    return true;
 }
+/*
+Personnage.prototype.deplacer = function(direction) {
+    // On ne peut pas se deplacer si un mouvement est deja  en cours !
+    if(this.etatAnimation >= 0) {
+        return false;
+    }
+    this.direction = direction;
+
+    var prochaineCase = this.getCoordonneesAdjacentes(direction);
+
+    // On commence l'animation
+    this.etatAnimation = 1;
+    this.x = parseInt(prochaineCase.x);
+    this.y = parseInt(prochaineCase.y);
+    return true;
+}
+*/

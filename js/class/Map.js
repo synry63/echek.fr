@@ -1,4 +1,12 @@
 var DECORS_NON_FRANCHISSABLE_NUM = {'2':true};
+var joueur = null;
+var personnages = null;
+
+var CHEMINRAPIDE = {
+    'HAUT_DROITE': 10,
+    'HAUT' : 11,
+    'DROITE' :12
+}
 function Map(nom) {
     var result;
     // Chargement du fichier
@@ -14,9 +22,9 @@ function Map(nom) {
     // Analyse des donnees
     this.tileset = new Tileset(mapData.tileset);
     this.terrain = mapData.terrain;
-
-    // Liste des personnages presents sur le terrain.
+    //this.joueur = j;
     this.personnages = new Array();
+
 }
 
 // Pour recuperer la taille (en tiles) de la carte
@@ -27,10 +35,7 @@ Map.prototype.getLargeur = function() {
     return this.terrain[0].length;
 }
 
-// Pour ajouter un personnage
-Map.prototype.addPersonnage = function(perso) {
-    this.personnages.push(perso);
-}
+
 Map.prototype.dessinerMap = function(context) {
     for(var i = 0, l = this.terrain.length ; i < l ; i++) {
         var ligne = this.terrain[i];
@@ -45,6 +50,11 @@ Map.prototype.dessinerMap = function(context) {
         this.personnages[i].dessinerPersonnage(context);
     }
 }
+// Pour ajouter un personnage
+Map.prototype.addPersonnage = function(perso) {
+    this.personnages.push(perso);
+}
+
 // recupere la case du survol de la souris
 Map.prototype.getCase = function(coorX,coorY) {
 
@@ -63,30 +73,36 @@ Map.prototype.getCase = function(coorX,coorY) {
     }
     return null;
 }
-// test si le case demande est disponible pour un deplacement
+// test l etat de la case
     Map.prototype.isCaseDisponible = function(celule){
+
+    if(celule.x>this.getLargeur()-1 || celule.y>this.getHauteur()-1){
+        return false;
+    }
     var typeDecorsNumero = this.terrain[celule.x][celule.y];
     if(DECORS_NON_FRANCHISSABLE_NUM[''+typeDecorsNumero+'']){
         return false;
     }
-    /*for(var i = 0; i < this.personnages.length ; i++) {
+    for(var i = 0; i < this.personnages.length ; i++) {
         persoX = this.personnages[i].x;
         persoY = this.personnages[i].y;
         if(celule.x == persoX && celule.y == persoY){
             return false;
         }
-    }*/
+    }
     return true;
 }
 // recupere le personnage selectionne
 Map.prototype.getPerso = function(celule){
 
     for(var i = 0; i < this.personnages.length ; i++) {
+        persoX = this.personnages[i].x;
+        persoY = this.personnages[i].y;
         if(celule.x == persoX && celule.y == persoY){
             return this.personnages[i];
         }
     }
-    return null;
+    return false;
 }
 
 // recupere toutes les cellules dispo du perso
@@ -96,13 +112,13 @@ Map.prototype.getTabDisponible = function(personnage){
     var debutPerimetre = {'x':personnage.x-personnage.nbMaxCaseDeplacement,'y':personnage.y-personnage.nbMaxCaseDeplacement};
     var finPerimetre = {'x':personnage.x+personnage.nbMaxCaseDeplacement,'y':personnage.y+personnage.nbMaxCaseDeplacement};
     for(var j = debutPerimetre.x;j<=finPerimetre.x;j++){
-        for(var i = debutPerimetre.y;i<finPerimetre.y;i++){
+        for(var i = debutPerimetre.y;i<=finPerimetre.y;i++){
             if(i<0) i=0;
             if(j<0) j=0;
             var celule =  {'x' : j, 'y' : i};
 
             if(this.isCaseDisponible(celule)){
-                var test = this.terrain[j][i];
+               // var test = this.terrain[j][i];
                 //arrayR.push(celule);
                 arrayR[''+celule.x+'_'+celule.y+''] = true;
             }
@@ -111,19 +127,66 @@ Map.prototype.getTabDisponible = function(personnage){
     }
     return arrayR;
 }
+// diagonal solution + precise
+Map.prototype.getDiagonalResult = function(cellule,caseDesti){
+    var x1 = (cellule.x);
+    var y1 = (cellule.y);
+    var x2 = (caseDesti.x);
+    var y2 = (caseDesti.y);
+
+    var xDistance = Math.abs(x1-x2);
+    var yDistance = Math.abs(y1-y2);
+    var result = null;
+    if (xDistance > yDistance)
+        result = 14*yDistance + 10*(xDistance-yDistance);
+    else
+        result = 14*xDistance + 10*(yDistance-xDistance);
+
+    return result
+}
+// manathan solution + rapide
+Map.prototype.getManathanResult = function(cellule,caseDesti){
+    var x1 = (cellule.x);
+    var y1 = (cellule.y);
+    var x2 = (caseDesti.x);
+    var y2 = (caseDesti.y);
+    //if(x1==x2 && y1==y2) return 0;
+
+   /* if(x1>=x2){
+        var xb = x1;
+        var xa = x2;
+    }
+    if(x2>=x1){
+        var xb = x2;
+        var xa = x1;
+    }
+    if(y2>=y1){
+        var yb = y2;
+        var ya = y1;
+    }
+
+    if(y1>=y2){
+        var yb = y1;
+        var ya = y2;
+    }*/
+    var result  = 10*(Math.abs(x1-x2)+Math.abs(y1-y2));
+    return result;
+    //var result = (xb-xa)+(yb-ya);
+}
 // test algo chemin
 Map.prototype.getTabRoute = function(cases,personnage,caseDesti){
-    var tabPoids = {};
+     tabPoids = {};
     var antecedant =  {};
     var keyFinal = caseDesti.x+'_'+caseDesti.y;
     var keyD = personnage.x+'_'+personnage.y;
+    cases[keyD] = true;
         for (var key in cases){
           ///  antecedant[key] = {};
             antecedant[key] = new Array();
 
-            if(keyD==key)
-                tabPoids[key] = {'name':key,'poids':0,'parcouru':false};
-            else
+           // if(keyFinal==key)
+           //     tabPoids[key] = {'name':key,'poids':0,'parcouru':false};
+           // else
                 tabPoids[key] = {'name':key,'poids':-1,'parcouru':false};
         var coorNoeud = key.split('_');
             coorNoeud[0] = parseInt(coorNoeud[0]);
@@ -155,109 +218,65 @@ Map.prototype.getTabRoute = function(cases,personnage,caseDesti){
             }
 
         }
+
     var trouve =false;
     var key = keyD;
     var i = 0;
     var nextNoeud = new Array();
-    var test =  new Array();
+    var test = new Array();
     var nouvKey = null;
+    var oldResult = null;
     while (key!=keyFinal){
-   // for (var key in tabPoids){
+        var c =  key.split('_');
+        var parent_x_y =  {'x' : parseInt(c[0]), 'y' :parseInt(c[1])};
         var antes = antecedant[key];
         for(var i=0;i<antes.length;i++){
-            //var coorNoeud = k.split('_');
-           // coorNoeud[0] = parseInt(coorNoeud[0]);
-           // coorNoeud[1] = parseInt(coorNoeud[1]);
+            c =  antes[i].split('_');
+            var ante_x_y =  {'x' : parseInt(c[0]), 'y' :parseInt(c[1])};
+            //var ante_x = parseInt(c[0]);
+            //var ante_y = parseInt(c[1]);
            if(tabPoids[antes[i]].parcouru==false){
-                nouvKey = antes[i];
-           }
-          /*  // antecedant haut
-            if(cases[coorNoeud[0]+'_'+(coorNoeud[1]-1)]!=undefined){
-               // keyAnte = coorNoeud[0]+'_'+(coorNoeud[1]-1);
-               // tabPoids[keyAnte].parcouru = true;
-               // tabPoids[keyAnte].poids =  tabPoids[key].poids+1;
-                antecedant[k][key] = true;
-                nextNoeud.push(tabPoids[keyAnte]);
 
-            }
-            // antecedant droite
-            if(cases[(coorNoeud[0]+1)+'_'+coorNoeud[1]]!=undefined){
-              //  keyAnte = (coorNoeud[0]+1)+'_'+coorNoeud[1];
-              //  tabPoids[keyAnte].parcouru = true;
-              //  tabPoids[keyAnte].poids =  tabPoids[key].poids+1;
-                antecedant[k][key] = true;
-                nextNoeud.push(tabPoids[keyAnte]);
-            }
-            // antecedant bas
-            if(cases[coorNoeud[0]+'_'+(coorNoeud[1]+1)]!=undefined){
-             //   keyAnte = coorNoeud[0]+'_'+(coorNoeud[1]+1);
-             //   tabPoids[keyAnte].parcouru = true;
-             //   tabPoids[keyAnte].poids =  tabPoids[key].poids+1;
-                antecedant[k][key] = true;
-                nextNoeud.push(tabPoids[keyAnte]);
-            }
-            // antecedant gauche
-            if(cases[(coorNoeud[0]-1)+'_'+coorNoeud[1]]!=undefined){
-           //     keyAnte = (coorNoeud[0]-1)+'_'+coorNoeud[1];
-           //     tabPoids[keyAnte].parcouru = true;
-           //     tabPoids[keyAnte].poids =  tabPoids[key].poids+1;
-                antecedant[k][key] = true;
-                nextNoeud.push(tabPoids[keyAnte]);
-            }*/
+               var result = this.getDiagonalResult(ante_x_y,caseDesti);
+               if(result<oldResult || oldResult==null){
+                   //tabPoids[key].parcouru = true;
+                   nouvKey = antes[i];
+                   var chemin =  ante_x_y;
+                   oldResult = result;
+               }
+
+           //        test.push(ante_x_y);
+
+           }
+             //  var arr =  key.split('_');
+              // test.push({'x' : parseInt(arr[0]), 'y' : parseInt(arr[1])});
+              // tabPoids[key].parcouru = true;
+
         }
-            tabPoids[key].parcouru = true;
-        var arr =  key.split('_');
-        test.push({'x' : arr[0], 'y' : arr[1]});
+        test.push(chemin);
+        oldResult = null;
+        tabPoids[key].parcouru = true;
         key = nouvKey;
+        //var arr =  key.split('_');
+        //test.push({'x' : parseInt(arr[0]), 'y' : parseInt(arr[1])});
+        //key = nouvKey;
 
             // recupere le plus petit;
 
 
     }
-    var arr =  keyFinal.split('_');
-    test.push({'x' : arr[0], 'y' : arr[1]});
+   // test.push(caseDesti);
+   // test = test.splice(1);
+
+
     return test;
 }
-n = 5;
-path = new Array(n);
-taboo = new Array(n);
-for(var i=0;i<n;i++) {
-    taboo[i] = false;
-}
-target = 4;
-/*adjacencymatrix = [[1,1,0,1,0,0],
-    [1,1,1,0,1,0],
-    [0,1,1,0,0,1],
-    [1,0,0,1,1,1],
-    [0,1,0,1,1,1],
-    [0,0,1,0,1,1]];
-*/
-adjacencymatrix = [[1,1,0,0,0],
-    [1,1,1,1,0],
-    [1,1,1,1,0],
-    [0,1,1,1,1],
-    [0,0,0,1,1]];
-Map.prototype.explore = function (position,depth){
-    path[depth] = position;
-    // on est sur le sommet d'arrivé -> fini
-    if (position==target) {
-        for(var i=0;i<=depth;i++) console.log(path[i]+' ');
-        console.log('next');
-        return;
-    }
-    taboo[position]= true;
-    // on explore les chemins restants
-    for(var i=0;i<n;i++) {
-        if (adjacencymatrix[position][i]==0 || taboo[i]==true) continue;
-        this.explore(i,depth+1);
-    }
-    taboo[position] = false;
-}
-// test algo chemin 2
-Map.prototype.getMatriceAdj = function(cases,personnage,caseDesti){
 
-}
+Map.prototype.parcouru = function (key){
+    if(tabPoids[key].parcouru==true) return true;
 
+    return false;
+}
 
 
 

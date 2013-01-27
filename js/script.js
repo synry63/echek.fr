@@ -31,10 +31,17 @@ var FIRST_Y = 0;
 var COLORS = ["#503A22", "#88502F", "#A17048", "#D9C38A", "#F7DDAC", "#503A22", "#88502F", "#A17048", "#D9C38A", "#F7DDAC", "#503A22", "#88502F", "#A17048", "#D9C38A", "#F7DDAC", "#D9C38A", "#503A22", "#D9C38A", "#000000", "#FFFFFF"];
 var GRIDS = [];
 
-
+var p = new Personnage("paladin.png", 7, 14, DIRECTION.HAUT,'SOLDAT_PALADIN','paladin',2);
+var p2 = new Personnage("paladin.png", 7, 10, DIRECTION.HAUT,'SOLDAT_PALADIN','paladin',5);
+var p3 = new Personnage("paladin.png", 6, 10, DIRECTION.HAUT,'SOLDAT_PALADIN','paladin',5);
 var map = new Map("premiere");
-var joueur = new Personnage("paladin.png", 7, 14, DIRECTION.HAUT,'SOLDAT_PALADIN','paladin',1);
-map.addPersonnage(joueur);
+var joueur = new Joueur(map);
+joueur.addPersonnage(p);
+map.addPersonnage(p);
+map.addPersonnage(p2);
+map.addPersonnage(p3);
+//map.addPersonnage(p);
+
 /**
  * TRAITEMENT LORSQUE LA PAGE EST CHARGÉ
  **/
@@ -51,8 +58,6 @@ window.addEventListener('load', function(){
     setInterval(function() {
         map.dessinerMap(ctx);
     }, 40);
-	// test algo chemin
-	map.explore(0,0);
     /**
      * ON AJOUTE LE MENU SUR LA CARTE
     **/
