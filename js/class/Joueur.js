@@ -49,7 +49,7 @@ Joueur.prototype.traitementClick = function(cellule) {
     this.personnageSelected = this.getMyPerso(cellule);
     if(this.personnageSelected!=false){
         casesDispoPersonnage = this.map.getTabDisponible(this.personnageSelected);
-        this.map.dessinerCasesDepPossible(ctx);
+      //  this.map.dessinerCasesDepPossible(ctx);
     }
 
 }
