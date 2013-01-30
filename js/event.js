@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $('canvas').mousemove(function(e){
        var cellule = map.getCase(e.pageX-$(this).offset().left,e.pageY-$(this).offset().top);
-        JOUEURS[TURN].traitementOver(cellule);
+      //  JOUEURS[TURN].traitementOver(cellule);
       // var result = map.isCaseDisponible(cellule);
       //  console.log(result);
     });

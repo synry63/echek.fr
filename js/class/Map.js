@@ -44,6 +44,7 @@ Map.prototype.dessinerMap = function(context,cases) {
             this.tileset.dessinerTile(ligne[j], context, j * 32, y);
         }
     }
+
     if(cases!=null){
         this.dessinerCasesDepPossible(context);
     }
@@ -54,6 +55,7 @@ Map.prototype.dessinerMap = function(context,cases) {
     }
 }
 Map.prototype.dessinerCasesDepPossible = function(context) {
+    context.fillStyle = "rgba(0, 0, 255, 0.5)";
     context.fillRect(64,64,32,32);
 }
 // Pour ajouter un personnage
