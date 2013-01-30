@@ -1,12 +1,14 @@
 $(document).ready(function() {
-   /* $('canvas').mousemove(function(e){
-         cellule = map.getCase(e.pageX-$(this).offset().left,e.pageY-$(this).offset().top);
-       var result = map.isCaseDisponible(cellule);
-        console.log(result);
-    });*/
+    $('canvas').mousemove(function(e){
+       var cellule = map.getCase(e.pageX-$(this).offset().left,e.pageY-$(this).offset().top);
+        JOUEURS[TURN].traitementOver(cellule);
+      // var result = map.isCaseDisponible(cellule);
+      //  console.log(result);
+    });
     $('canvas').click(function(e){
         var cellule = map.getCase(e.pageX-$(this).offset().left,e.pageY-$(this).offset().top);
-        joueur.traitementClick(cellule);
+        //joueur.traitementClick(cellule);
+        JOUEURS[TURN].traitementClick(cellule);
     });
     //$('canvas').click(joueur.traitementClick);
     $(document).keyup(joueur.traitementClavier);

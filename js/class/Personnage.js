@@ -7,7 +7,7 @@ var DIRECTION = {
 
 var DUREE_ANIMATION = 5;
 var DUREE_DEPLACEMENT = 15;
-
+var joueur = null;
 function Personnage(url, x, y, direction,id,nom,nbcase) {
     this.x = x; // (en cases)
     this.y = y; // (en cases)
@@ -30,6 +30,9 @@ function Personnage(url, x, y, direction,id,nom,nbcase) {
         this.referenceDuPerso.hauteur = this.height / 4;
     }
     this.image.src = "images/sprites/" + url;
+}
+Personnage.prototype.setJoueur = function(joueur){
+    this.joueur = joueur;
 }
 Personnage.prototype.isDepAutorise = function(cases,desti) {
     var key = desti.x+'_'+desti.y;
@@ -78,7 +81,7 @@ Personnage.prototype.dessinerPersonnage = function(context) {
         this.largeur * frame, this.direction * this.hauteur, // Point d'origine du rectangle source Ã  prendre dans notre image
         this.largeur, this.hauteur, // Taille du rectangle source (c'est la taille du personnage)
         // Point de destination (depend de la taille du personnage)
-        (this.x * 32) - (this.largeur / 2) + 16 + decalageX, (this.y * 32) - this.hauteur + 24 + decalageY,
+        (this.x * 32) - (this.largeur / 2) + 16+ decalageX, (this.y * 32) - this.hauteur + 32 + decalageY,
         this.largeur, this.hauteur // Taille du rectangle destination (c'est la taille du personnage)
     );
 }
@@ -131,7 +134,9 @@ Personnage.prototype.deplacement = function(cases){
         clearInterval(idInterval);
         this.nextDep = 0;
         this.maxDep = null;
+        this.joueur.personnageSelected = false;
         return false;
+
     }
     this.deplacer(cases[this.nextDep]);
     this.nextDep++;

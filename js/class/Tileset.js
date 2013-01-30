@@ -20,8 +20,10 @@ Tileset.prototype.dessinerTile = function(numero, context, xDestination, yDestin
 
     var xSource = (xSourceEnTiles - 1) * 32;
     var ySource = (ySourceEnTiles - 1) * 32;
-
+  //  context.strokeStyle = "rgba(0, 0, 255, 0.5)";
+    context.strokeRect(xDestination,yDestination,32,32);
     context.drawImage(this.image, xSource, ySource, 32, 32, xDestination, yDestination, 32, 32);
+
 }
 
 

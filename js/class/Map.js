@@ -1,4 +1,4 @@
-var DECORS_NON_FRANCHISSABLE_NUM = {'2':true};
+var DECORS_NON_FRANCHISSABLE_NUM = {'1':true};
 var joueur = null;
 var personnages = null;
 
@@ -50,6 +50,9 @@ Map.prototype.dessinerMap = function(context) {
         this.personnages[i].dessinerPersonnage(context);
     }
 }
+Map.prototype.dessinerCasesDepPossible = function() {
+    ctx.fillRect(64,64,32,32);
+}
 // Pour ajouter un personnage
 Map.prototype.addPersonnage = function(perso) {
     this.personnages.push(perso);
@@ -79,7 +82,7 @@ Map.prototype.getCase = function(coorX,coorY) {
     if(celule.x>this.getLargeur()-1 || celule.y>this.getHauteur()-1){
         return false;
     }
-    var typeDecorsNumero = this.terrain[celule.x][celule.y];
+    var typeDecorsNumero = this.terrain[celule.y][celule.x];
     if(DECORS_NON_FRANCHISSABLE_NUM[''+typeDecorsNumero+'']){
         return false;
     }
