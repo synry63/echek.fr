@@ -1,6 +1,5 @@
 var personnageSelected = null;
 var map = null;
-var casesDispoPersonnage = null;
 // Liste des personnages presents sur le terrain.
 var personnages = null;
 function Joueur(m) {

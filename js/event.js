@@ -30,7 +30,7 @@ $(document).ready(function() {
     });
     */
     // Gestion du clavier
-   window.onkeydown = function(event) {
+  /* window.onkeydown = function(event) {
 // On rÃ©cupÃ¨re le code de la touche
         var e = event || window.event;
         var key = e.which || e.keyCode;
@@ -55,5 +55,5 @@ $(document).ready(function() {
         }
         return false;
     }
-
+*/
 });

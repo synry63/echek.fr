@@ -36,7 +36,7 @@ Map.prototype.getLargeur = function() {
 }
 
 
-Map.prototype.dessinerMap = function(context) {
+Map.prototype.dessinerMap = function(context,cases) {
     for(var i = 0, l = this.terrain.length ; i < l ; i++) {
         var ligne = this.terrain[i];
         var y = i * 32;
@@ -44,14 +44,17 @@ Map.prototype.dessinerMap = function(context) {
             this.tileset.dessinerTile(ligne[j], context, j * 32, y);
         }
     }
+    if(cases!=null){
+        this.dessinerCasesDepPossible(context);
+    }
 
     // Dessin des personnages
     for(var i = 0, l = this.personnages.length ; i < l ; i++) {
         this.personnages[i].dessinerPersonnage(context);
     }
 }
-Map.prototype.dessinerCasesDepPossible = function() {
-    ctx.fillRect(64,64,32,32);
+Map.prototype.dessinerCasesDepPossible = function(context) {
+    context.fillRect(64,64,32,32);
 }
 // Pour ajouter un personnage
 Map.prototype.addPersonnage = function(perso) {

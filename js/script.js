@@ -10,6 +10,7 @@ function log(msg){
 **/
 var canvas;
 var ctx;
+var casesDispoPersonnage = null;
 
 /**
  * VARIABLES GLOBALES POUR LE JEUX
@@ -71,7 +72,7 @@ window.addEventListener('load', function(){
     canvas.height = map.getHauteur() * 32;
 
     idMainWhile =  setInterval(function() {
-        map.dessinerMap(ctx);
+        map.dessinerMap(ctx,casesDispoPersonnage);
     }, 40);
     /**
      * ON AJOUTE LE MENU SUR LA CARTE
