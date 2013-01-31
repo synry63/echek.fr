@@ -1,6 +1,4 @@
-/**
- * FONCTION QUI PERMET D'AFFICHER UN LOG DANS LA CONSOLE JAVASCRIPT
-**/
+
 function log(msg){
 	console.log(msg);
 }
@@ -16,30 +14,18 @@ var celluleOver = null;
 /**
  * VARIABLES GLOBALES POUR LE JEUX
 **/
-//var CANVAS_WIDTH = document.getElementById('canvas').width;
-//var CANVAS_HEIGHT = document.getElementById('canvas').height;
 var JOUEURS = new Array(2);
 var TURN = 0;
-/**
- * VARIABLE GLOBALES POUR LA GRILLE DU JEUX
-**/
-/*var RECT_GRID_HEIGHT = 60;
-var RECT_GRID_WIDTH = 60;
-var PER_ROW = 20;
-var PER_COL = 10;
-var X, Y;
-var FIRST_X = 0;
-var FIRST_Y = 0;
-var COLORS = ["#503A22", "#88502F", "#A17048", "#D9C38A", "#F7DDAC", "#503A22", "#88502F", "#A17048", "#D9C38A", "#F7DDAC", "#503A22", "#88502F", "#A17048", "#D9C38A", "#F7DDAC", "#D9C38A", "#503A22", "#D9C38A", "#000000", "#FFFFFF"];
-var GRIDS = [];
-*/
 
 var map = new Map("premiere");
 var joueur = new Joueur(map);
 var joueur2 = new Joueur(map);
+
 JOUEURS[0] = joueur;
 JOUEURS[1] = joueur2;
+
 //var posX = 5;
+
 for (var i=5;i<15;i++){
     var pJ1 = new Personnage("chavalier rang 1.png",i, 14, DIRECTION.HAUT,'SOLDAT_RANG1','soldat',2);
     pJ1.setJoueur(joueur);
@@ -59,14 +45,11 @@ for (var i=5;i<15;i++){
 //map.addPersonnage(p3);
 //map.addPersonnage(p);
 
-/**
- * TRAITEMENT LORSQUE LA PAGE EST CHARGÉ
- **/
 window.addEventListener('load', function(){
 
-	/**
-	 * ON RECUPÈRE LE CANVAS PUIS INITIALISE LA MAP
-	**/
+    init();
+    playSound(1);
+
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
     canvas.width  = map.getLargeur() * 32;
@@ -79,21 +62,6 @@ window.addEventListener('load', function(){
             map.dessinerCaseOverDispoDep(ctx,celluleOver,casesDispoPersonnage);
         }
     }, 40);
-    /**
-     * ON AJOUTE LE MENU SUR LA CARTE
-    **/
-    /**
-     * ON AJOUT EN PREMIER LE FOND DU MENU
-    **/
-    /*ctx.fillStyle = 'white';
-    ctx.shadowColor = 'black';
-    ctx.shadowBlur = 20;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
-    ctx.fillRect((CANVAS_WIDTH-500)/2, (CANVAS_HEIGHT-200)/2, 500, 200);*/
-    /**
-     * ENSUITE LES MENUS DU JEUX
-    **/
 
 
 }, false);
