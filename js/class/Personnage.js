@@ -40,6 +40,21 @@ Personnage.prototype.isDepAutorise = function(cases,desti) {
 
     return false;
 }
+Personnage.prototype.isPorteDattaque = function(cases){
+    var keyPerso = this.x+'_'+this.y;
+    var arrayAdjacent = new Array();
+    arrayAdjacent.push((this.x+1)+'_'+this.y);
+    arrayAdjacent.push((this.x-1)+'_'+this.y);
+    arrayAdjacent.push((this.x)+'_'+(this.y-1));
+    arrayAdjacent.push((this.x+1)+'_'+(this.y+1));
+    for (var i=0;i<arrayAdjacent.length;i++){
+        if(cases[arrayAdjacent[i]]==true){
+            return true;
+        }
+    }
+    return false;
+
+}
 Personnage.prototype.dessinerPersonnage = function(context) {
     var frame = 0; // Numero de l'image Ã  prendre pour l'animation
     var decalageX = 0, decalageY = 0; // Decalage a  appliquer a  la position du personnage

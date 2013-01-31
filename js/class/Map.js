@@ -61,6 +61,13 @@ Map.prototype.dessinerCasesDepPossible = function(context,cases) {
     }
 
 }
+Map.prototype.dessinerCaseOverDispoDep = function(context,cellule,cases){
+    var test = cases[cellule.x+'_'+cellule.y];
+    if(test==true){
+        context.fillStyle = "rgba(35, 104,24, 1)";
+        context.fillRect(cellule.x*32, cellule.y*32,32,32);
+    }
+}
 // Pour ajouter un personnage
 Map.prototype.addPersonnage = function(perso) {
     this.personnages.push(perso);
@@ -69,7 +76,7 @@ Map.prototype.addPersonnage = function(perso) {
 // recupere la case du survol de la souris
 Map.prototype.getCase = function(coorX,coorY) {
 
-    for (i=0;i<this.terrain.length;i++){
+    for (var i=0;i<this.terrain.length;i++){
         var ligne = this.terrain[i];
         var y = i * 32;
         for(var j = 0, k = ligne.length ; j < k ; j++) {
@@ -83,6 +90,50 @@ Map.prototype.getCase = function(coorX,coorY) {
         }
     }
     return null;
+}
+Map.prototype.getCaseAdjacenteSelectionne = function (coorX,coorY,cellule,cases){
+    var x = cellule.x * 32;
+    var y = cellule.y * 32;
+    var w = x+32;
+    var h = y+32;
+    var celluleAdj = null;
+    var test1 = coorY - y;
+    var test2 = h - coorY;
+
+    var test3 = coorX - x;
+    var test4 = w - coorX;
+
+
+    if(test1<test2){
+        console.log('case du haut');
+        var c =  {'x' : cellule.x, 'y' :cellule.y-1};
+        if(cases[c.x+'_'+ c.y]==true){
+            celluleAdj = c;
+        }
+
+    }
+    if(test1>test2){
+        console.log('case du bas');
+        var c = {'x' : cellule.x, 'y' :cellule.y+1};
+        if(cases[c.x+'_'+ c.y]==true){
+            celluleAdj = c;
+        }
+    }
+    if(test3<test4){
+        console.log('case gauche');
+        var c = {'x' : cellule.x-1, 'y' :cellule.y};
+        if(cases[c.x+'_'+ c.y]==true){
+            celluleAdj = c;
+        }
+    }
+    if(test3>test4){
+        console.log('case droite');
+        var c = {'x' : cellule.x+1, 'y' :cellule.y};
+        if(cases[c.x+'_'+ c.y]==true){
+            celluleAdj = c;
+        }
+    }
+    return celluleAdj;
 }
 // test l etat de la case
     Map.prototype.isCaseDisponible = function(celule){

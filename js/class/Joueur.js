@@ -8,9 +8,6 @@ function Joueur(m) {
     this.personnages = new Array();
 
 }
-Joueur.prototype.getPersonnageSelected = function(){
-    return this.personnageSelected;
-}
 // Pour ajouter un personnage
 Joueur.prototype.addPersonnage = function(perso) {
     this.personnages.push(perso);
@@ -32,9 +29,11 @@ Joueur.prototype.traitementClavier = function(event) {
     }
 }
 Joueur.prototype.traitementClick = function(cellule) {
-        if(casesDispoPersonnage!=null){
+
+       if(casesDispoPersonnage!=null){
             var result =  this.personnageSelected.isDepAutorise(casesDispoPersonnage,cellule);
             if(result) {
+
                 var arrayRoute = map.getTabRoute(casesDispoPersonnage,this.personnageSelected,cellule);
                 this.personnageSelected.setNbDepAeffectuer(arrayRoute);
                 var persoSelect = this.personnageSelected; // global, je peux pas passe ma propriete
@@ -46,12 +45,20 @@ Joueur.prototype.traitementClick = function(cellule) {
             }
         casesDispoPersonnage = null;
     }
+    // selection d un de mes personnages
     this.personnageSelected = this.getMyPerso(cellule);
     if(this.personnageSelected!=false){
         casesDispoPersonnage = this.map.getTabDisponible(this.personnageSelected);
       //  this.map.dessinerCasesDepPossible(ctx);
     }
 
+}
+Joueur.prototype.getMyEnemy = function (cellule){
+    var tempP =  map.getPerso(cellule);
+    if(tempP.joueur!=this){
+        return tempP
+    }
+    return false;
 }
 Joueur.prototype.getMyPerso = function(cellule){
     var tempP =  map.getPerso(cellule);

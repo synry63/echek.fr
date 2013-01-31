@@ -1,8 +1,18 @@
 $(document).ready(function() {
     $('canvas').mousemove(function(e){
-       var cellule = map.getCase(e.pageX-$(this).offset().left,e.pageY-$(this).offset().top);
+        celluleOver = map.getCase(e.pageX-$(this).offset().left,e.pageY-$(this).offset().top);
+        if(casesDispoPersonnage!=null){
+            var enemy =  JOUEURS[TURN].getMyEnemy(celluleOver);
+            if(enemy!=false && enemy.isPorteDattaque(casesDispoPersonnage)){
+                $('canvas').addClass('swordCursor');
+                celluleOver = map.getCaseAdjacenteSelectionne(e.pageX-$(this).offset().left,e.pageY-$(this).offset().top,celluleOver,casesDispoPersonnage);
+            }
+            else {
+                $('canvas').removeClass('swordCursor');
+            }
+        }
       //  JOUEURS[TURN].traitementOver(cellule);
-      // var result = map.isCaseDisponible(cellule);
+      // var result = 1;
       //  console.log(result);
     });
     $('canvas').click(function(e){
