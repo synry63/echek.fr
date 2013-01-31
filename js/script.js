@@ -11,6 +11,7 @@ function log(msg){
 var canvas;
 var ctx;
 var casesDispoPersonnage = null;
+var celluleOver = null;
 
 /**
  * VARIABLES GLOBALES POUR LE JEUX
@@ -75,6 +76,7 @@ window.addEventListener('load', function(){
         map.dessinerMap(ctx);
         if(casesDispoPersonnage!=null){
             map.dessinerCasesDepPossible(ctx,casesDispoPersonnage);
+            map.dessinerCaseOverDispoDep(ctx,celluleOver,casesDispoPersonnage);
         }
     }, 40);
     /**
