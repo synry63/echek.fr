@@ -9,16 +9,14 @@ $green: #4A9143;
 $red: red;
 
 html, body{
-	height: 100%;
 	width: 100%;
     background-image: url(../images/bgBody.png);
 	backgrond-repeat: repeat;
-	canvas{
-		position: absolute;
+	canvas#canvas{
+		width: 640px;
+		display: block;
 		background-color: $green;
-		left: 50%;
-		top: 50%;
-		margin: -300px 0 0 -600px;
+		margin: 100px auto 0 auto;
 	}
 }
 

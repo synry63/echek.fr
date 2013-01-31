@@ -69,21 +69,19 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 /* line 11, ../sass/screen.scss */
 html, body {
-  height: 100%;
   width: 100%;
   background-image: url(../images/bgBody.png);
   backgrond-repeat: repeat;
 }
-/* line 16, ../sass/screen.scss */
-html canvas, body canvas {
-  position: absolute;
+/* line 15, ../sass/screen.scss */
+html canvas#canvas, body canvas#canvas {
+  width: 640px;
+  display: block;
   background-color: #4a9143;
-  left: 50%;
-  top: 50%;
-  margin: -300px 0 0 -600px;
+  margin: 100px auto 0 auto;
 }
 
-/* line 25, ../sass/screen.scss */
+/* line 23, ../sass/screen.scss */
 div.sprite {
   height: 40px;
   width: 40px;
@@ -92,13 +90,10 @@ div.sprite {
   background-position: 0 0;
 }
 
-/* line 33, ../sass/screen.scss */
+/* line 31, ../sass/screen.scss */
 div.spritemov {
   height: 40px;
   width: 40px;
   background-image: url(../images/sprites/sprite_baladin.gif);
   background-repeat: no-repeat;
 }
-
-/* Start http://www.cursors-4u.com */
-#swordCursor {cursor: url(http://cur.cursors-4u.net/sports/spo-1/spo15.cur), progress !important;} /* End http://www.cursors-4u.com */
