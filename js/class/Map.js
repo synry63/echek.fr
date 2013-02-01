@@ -26,7 +26,13 @@ function Map(nom) {
     this.personnages = new Array();
 
 }
-
+Map.prototype.killPerso = function(p){
+    for(var i = 0, l = this.personnages.length ; i < l ; i++) {
+        if(this.personnages[i]==p){
+            this.personnages.splice(i,1);
+        }
+    }
+}
 // Pour recuperer la taille (en tiles) de la carte
 Map.prototype.getHauteur = function() {
     return this.terrain.length;
@@ -91,7 +97,7 @@ Map.prototype.getCase = function(coorX,coorY) {
     }
     return null;
 }
-Map.prototype.getCaseAdjacenteSelectionne = function (coorX,coorY,cellule,cases){
+Map.prototype.getCaseAdjacenteSelectionne = function (coorX,coorY,cellule,p){
     var x = cellule.x * 32;
     var y = cellule.y * 32;
     var w = x+32;
@@ -104,32 +110,32 @@ Map.prototype.getCaseAdjacenteSelectionne = function (coorX,coorY,cellule,cases)
     var test4 = w - coorX;
 
 
-    if(test1<test2){
+    if(test1<test2 && test1<test3 && test4){
         console.log('case du haut');
         var c =  {'x' : cellule.x, 'y' :cellule.y-1};
-        if(cases[c.x+'_'+ c.y]==true){
+        if(p.casesDispoPersonnage[c.x+'_'+ c.y]==true || (p.x==c.x && p.y==c.y)){
             celluleAdj = c;
         }
 
     }
-    if(test1>test2){
+    if(test1>test2 && test1>test3 && test1>test4){
         console.log('case du bas');
         var c = {'x' : cellule.x, 'y' :cellule.y+1};
-        if(cases[c.x+'_'+ c.y]==true){
+        if(p.casesDispoPersonnage[c.x+'_'+ c.y]==true || (p.x==c.x && p.y==c.y)){
             celluleAdj = c;
         }
     }
-    if(test3<test4){
+    if(test3<test4 && test3<test1 && test3<test2){
         console.log('case gauche');
         var c = {'x' : cellule.x-1, 'y' :cellule.y};
-        if(cases[c.x+'_'+ c.y]==true){
+        if(p.casesDispoPersonnage[c.x+'_'+ c.y]==true || (p.x==c.x && p.y==c.y)){
             celluleAdj = c;
         }
     }
-    if(test3>test4){
+    if(test3>test4 && test3>test1 && test3>test2){
         console.log('case droite');
         var c = {'x' : cellule.x+1, 'y' :cellule.y};
-        if(cases[c.x+'_'+ c.y]==true){
+        if(p.casesDispoPersonnage[c.x+'_'+ c.y]==true || (p.x==c.x && p.y==c.y)){
             celluleAdj = c;
         }
     }
@@ -236,8 +242,9 @@ Map.prototype.getManathanResult = function(cellule,caseDesti){
     //var result = (xb-xa)+(yb-ya);
 }
 // test algo chemin
-Map.prototype.getTabRoute = function(cases,personnage,caseDesti){
-     tabPoids = {};
+Map.prototype.getTabRoute = function(personnage,caseDesti){
+    var cases = personnage.casesDispoPersonnage;
+    var tabPoids = {};
     var antecedant =  {};
     var keyFinal = caseDesti.x+'_'+caseDesti.y;
     var keyD = personnage.x+'_'+personnage.y;

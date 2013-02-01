@@ -8,6 +8,7 @@ var DIRECTION = {
 var DUREE_ANIMATION = 5;
 var DUREE_DEPLACEMENT = 15;
 var joueur = null;
+var casesDispoPersonnage = null;
 function Personnage(url, x, y, direction,id,nom,nbcase) {
     this.x = x; // (en cases)
     this.y = y; // (en cases)
@@ -16,7 +17,7 @@ function Personnage(url, x, y, direction,id,nom,nbcase) {
     this.nextDep = 0;
     this.etatAnimation = -1;
     this.nom = nom;
-    this.id =id;
+    this.id =id;////////////////;
     this.nbMaxCaseDeplacement = nbcase;
     // Chargement de l'image dans l'attribut image
     this.image = new Image();
@@ -34,13 +35,13 @@ function Personnage(url, x, y, direction,id,nom,nbcase) {
 Personnage.prototype.setJoueur = function(joueur){
     this.joueur = joueur;
 }
-Personnage.prototype.isDepAutorise = function(cases,desti) {
+Personnage.prototype.isDepAutorise = function(desti) {
     var key = desti.x+'_'+desti.y;
-    if(cases[key]!=undefined) return true;
+    if(this.casesDispoPersonnage[key]!=undefined) return true;
 
     return false;
 }
-Personnage.prototype.isPorteDattaque = function(cases){
+Personnage.prototype.isPorteDattaque = function(moi){
     var keyPerso = this.x+'_'+this.y;
     var arrayAdjacent = new Array();
     arrayAdjacent.push((this.x+1)+'_'+this.y);
@@ -48,21 +49,22 @@ Personnage.prototype.isPorteDattaque = function(cases){
     arrayAdjacent.push((this.x)+'_'+(this.y-1));
     arrayAdjacent.push((this.x+1)+'_'+(this.y+1));
     for (var i=0;i<arrayAdjacent.length;i++){
-        if(cases[arrayAdjacent[i]]==true){
+        if(moi.casesDispoPersonnage[arrayAdjacent[i]]==true){
             return true;
         }
     }
     return false;
-
 }
 Personnage.prototype.dessinerPersonnage = function(context) {
     var frame = 0; // Numero de l'image Ã  prendre pour l'animation
     var decalageX = 0, decalageY = 0; // Decalage a  appliquer a  la position du personnage
     if(this.etatAnimation >= DUREE_DEPLACEMENT) {
         // Si le deplacement a atteint ou depasse le temps necesaire pour s'effectuer, on le termine
+        FINTOUR = true;
         this.etatAnimation = -1;
     } else if(this.etatAnimation >= 0) {
         // On calcule l'image (frame) de l'animation e  afficher
+        FINTOUR = false;
         frame = Math.floor(this.etatAnimation / DUREE_ANIMATION);
         if(frame > 3) {
             frame %= 4;
@@ -141,15 +143,17 @@ Personnage.prototype.getDirection = function(caseTo) {
 Personnage.prototype.setNbDepAeffectuer = function(cases){
     this.maxDep = cases.length-1;
 }
-Personnage.prototype.deplacement = function(cases){
+Personnage.prototype.deplacement = function(cases,callback){
     if(this.etatAnimation >= 0 ) {
         return false;
     }
+    // fin de l animation
     if(this.nextDep>this.maxDep){
         clearInterval(idInterval);
         this.nextDep = 0;
         this.maxDep = null;
-        this.joueur.personnageSelected = false;
+        personnageSelected = false;
+        callback();
         return false;
 
     }
@@ -164,7 +168,6 @@ Personnage.prototype.deplacer = function(caseTo) {
    this.direction = this.getDirection(caseTo);
    this.x = parseInt(caseTo.x);
    this.y = parseInt(caseTo.y);
-   return true;
 }
 /*
 Personnage.prototype.deplacer = function(direction) {
