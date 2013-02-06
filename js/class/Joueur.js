@@ -1,15 +1,14 @@
-var personnageSelected = null;
-var map = null;
+//var personnageSelected = null;
+//var casesDispoPersonnage = null;
+var map;
 // Liste des personnages presents sur le terrain.
-var personnages = null;
+var personnages;
 function Joueur(m) {
-    this.personnageSelected = false;
+    //this.personnageSelected = false;
     this.map = m;
     this.personnages = new Array();
+    this.monEnemyActuel = null;
 
-}
-Joueur.prototype.getPersonnageSelected = function(){
-    return this.personnageSelected;
 }
 // Pour ajouter un personnage
 Joueur.prototype.addPersonnage = function(perso) {
@@ -19,11 +18,6 @@ Joueur.prototype.addPersonnage = function(perso) {
 Joueur.prototype.getPersonnages = function() {
     return  this.personnages;
 }
-Joueur.prototype.traitementOver = function(cellule) {
-    if(this.personnageSelected){
-        this.map.dessinerCasesDepPossible(ctx);
-    }
-}
 Joueur.prototype.traitementClavier = function(event) {
     var e = event || window.event;
     var key = e.which || e.keyCode;
@@ -31,27 +25,49 @@ Joueur.prototype.traitementClavier = function(event) {
         personnageSelected = false;
     }
 }
-Joueur.prototype.traitementClick = function(cellule) {
-        if(casesDispoPersonnage!=null){
-            var result =  this.personnageSelected.isDepAutorise(casesDispoPersonnage,cellule);
-            if(result) {
-                var arrayRoute = map.getTabRoute(casesDispoPersonnage,this.personnageSelected,cellule);
-                this.personnageSelected.setNbDepAeffectuer(arrayRoute);
-                var persoSelect = this.personnageSelected; // global, je peux pas passe ma propriete
-                idInterval =  setInterval(function() {
-                   persoSelect.deplacement(arrayRoute);
-                },0);
-            if(TURN==0) TURN = 1;
-            else TURN = 0;
-            }
-        casesDispoPersonnage = null;
-    }
-    this.personnageSelected = this.getMyPerso(cellule);
-    if(this.personnageSelected!=false){
-        casesDispoPersonnage = this.map.getTabDisponible(this.personnageSelected);
-      //  this.map.dessinerCasesDepPossible(ctx);
-    }
+Joueur.prototype.traitementClick = function(cellule,enemy) {
 
+    var result = false;
+       if(personnageSelected.casesDispoPersonnage!=null){
+            result =  personnageSelected.isDepAutorise(cellule);
+            if(result) {
+                var arrayRoute = map.getTabRoute(personnageSelected,cellule);
+                personnageSelected.setNbDepAeffectuer(arrayRoute);
+                var t = this;
+                idInterval =  setInterval(function() {
+                    personnageSelected.deplacement(arrayRoute,t.traitementAttaque,enemy);
+                },0);
+
+            personnageSelected.casesDispoPersonnage = null;
+            }
+            else if(enemy) this.traitementAttaque(enemy);
+
+
+    }
+    // selection d un de mes personnages
+       var  temp_personnageSelected = this.getMyPerso(cellule);
+        if(temp_personnageSelected!=false && temp_personnageSelected.etatAnimation==-1  && enemy==false){
+            personnageSelected = temp_personnageSelected;
+            var casesDispo= this.map.getTabDisponible(personnageSelected);
+            personnageSelected.casesDispoPersonnage = casesDispo;
+        }
+    //}
+
+}
+Joueur.prototype.traitementAttaque = function(enemy){
+    if(enemy){
+        this.map.killPerso(enemy);
+    }
+    if(TURN==0) TURN = 1;
+    else TURN = 0;
+    personnageSelected = false;
+}
+Joueur.prototype.getMyEnemy = function (cellule){
+    var tempP =  map.getPerso(cellule);
+    if(tempP.joueur!=this){
+        return tempP
+    }
+    return false;
 }
 Joueur.prototype.getMyPerso = function(cellule){
     var tempP =  map.getPerso(cellule);

@@ -4,15 +4,14 @@ function log(msg){
 }
 
 /**
- * VARIABLES POUR LE JEUX
+ * VARIABLES GLOBALES POUR LE JEUX
 **/
 var canvas;
 var ctx;
-var casesDispoPersonnage = null;
-
-/**
- * VARIABLES GLOBALES POUR LE JEUX
-**/
+var personnageSelected = false;
+//var enemySelected = false;
+var celluleOver = null;
+var FINTOUR = true;
 var JOUEURS = new Array(2);
 var TURN = 0;
 
@@ -23,34 +22,25 @@ var joueur2 = new Joueur(map);
 JOUEURS[0] = joueur;
 JOUEURS[1] = joueur2;
 
-//var posX = 5;
-
+// pose des perso sur la map
 for (var i=5;i<15;i++){
-    var pJ1 = new Personnage("chavalier rang 1.png",i, 14, DIRECTION.HAUT,'SOLDAT_RANG1','soldat',2);
+    var pJ1 = new Personnage("chavalier rang 1.png",i, 14, DIRECTION.HAUT,'SOLDAT_RANG1','soldat',2,10);
     pJ1.setJoueur(joueur);
-    var pJ2 = new Personnage("chavalier rang 1.png",i, 0, DIRECTION.BAS,'SOLDAT_RANG1','soldat',2);
+    var pJ2 = new Personnage("chavalier rang 1.png",i, 0, DIRECTION.BAS,'SOLDAT_RANG1','soldat',2,10);
     pJ2.setJoueur(joueur2);
     joueur.addPersonnage(pJ1);
     joueur2.addPersonnage(pJ2);
     map.addPersonnage(pJ1);
     map.addPersonnage(pJ2);
 }
-//var p2 = new Personnage("paladin.png", 7, 10, DIRECTION.HAUT,'SOLDAT_PALADIN','paladin',5);
-//var p3 = new Personnage("paladin.png", 6, 10, DIRECTION.HAUT,'SOLDAT_PALADIN','paladin',5);
-
-//joueur.addPersonnage(p);
-//map.addPersonnage(p);
-//map.addPersonnage(p2);
-//map.addPersonnage(p3);
-//map.addPersonnage(p);
 
 
 var preload;
-        
+
 function init(){
-    
+
     createjs.FlashPlugin.BASE_PATH = 'js/soundjs/src/soundjs/';
-    
+
     if (!createjs.SoundJS.checkPlugin(true)) {
         alert('Imposible de chargé les plugins');
         return;
@@ -62,7 +52,7 @@ function init(){
 
     preload = new createjs.PreloadJS();
     preload.installPlugin(createjs.SoundJS);
-    
+
     preload.onFileLoad = function(event) {
         console.log('Le son est chargé, prêt à lire !');
     };
@@ -100,8 +90,10 @@ window.addEventListener('load', function(){
 
     idMainWhile =  setInterval(function() {
         map.dessinerMap(ctx);
-        if(casesDispoPersonnage!=null){
-            map.dessinerCasesDepPossible(ctx,casesDispoPersonnage);
+        if(personnageSelected.casesDispoPersonnage){
+            map.dessinerCasesDepPossible(ctx,personnageSelected.casesDispoPersonnage);
+            if(celluleOver!=null)
+                map.dessinerCaseOverDispoDep(ctx,celluleOver,personnageSelected.casesDispoPersonnage);
         }
     }, 40);
 

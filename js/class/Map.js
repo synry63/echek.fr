@@ -26,7 +26,15 @@ function Map(nom) {
     this.personnages = new Array();
 
 }
+Map.prototype.killPerso = function(p){
+    for(var i = 0, l = this.personnages.length ; i < l ; i++) {
+        if(this.personnages[i]==p){
+            this.personnages[i].pdv-=2;
+            if(this.personnages[i].pdv<=0) this.personnages.splice(i,1);
 
+        }
+    }
+}
 // Pour recuperer la taille (en tiles) de la carte
 Map.prototype.getHauteur = function() {
     return this.terrain.length;
@@ -50,6 +58,8 @@ Map.prototype.dessinerMap = function(context) {
     for(var i = 0, l = this.personnages.length ; i < l ; i++) {
         this.personnages[i].dessinerPersonnage(context);
     }
+
+
 }
 Map.prototype.dessinerCasesDepPossible = function(context,cases) {
     context.fillStyle = "rgba(46, 184, 0, 0.5)";
@@ -61,6 +71,13 @@ Map.prototype.dessinerCasesDepPossible = function(context,cases) {
     }
 
 }
+Map.prototype.dessinerCaseOverDispoDep = function(context,cellule,cases){
+    var test = cases[cellule.x+'_'+cellule.y];
+    if(test==true){
+        context.fillStyle = "rgba(35, 104,24, 1)";
+        context.fillRect(cellule.x*32, cellule.y*32,32,32);
+    }
+}
 // Pour ajouter un personnage
 Map.prototype.addPersonnage = function(perso) {
     this.personnages.push(perso);
@@ -69,7 +86,7 @@ Map.prototype.addPersonnage = function(perso) {
 // recupere la case du survol de la souris
 Map.prototype.getCase = function(coorX,coorY) {
 
-    for (i=0;i<this.terrain.length;i++){
+    for (var i=0;i<this.terrain.length;i++){
         var ligne = this.terrain[i];
         var y = i * 32;
         for(var j = 0, k = ligne.length ; j < k ; j++) {
@@ -83,6 +100,50 @@ Map.prototype.getCase = function(coorX,coorY) {
         }
     }
     return null;
+}
+Map.prototype.getCaseAdjacenteSelectionne = function (coorX,coorY,cellule,p){
+    var x = cellule.x * 32;
+    var y = cellule.y * 32;
+    var w = x+32;
+    var h = y+32;
+    var celluleAdj = null;
+    var test1 = coorY - y;
+    var test2 = h - coorY;
+
+    var test3 = coorX - x;
+    var test4 = w - coorX;
+
+
+    if(test1<test2 && test1<test3 && test4){
+        console.log('case du haut');
+        var c =  {'x' : cellule.x, 'y' :cellule.y-1};
+        if(p.casesDispoPersonnage[c.x+'_'+ c.y]==true || (p.x==c.x && p.y==c.y)){
+            celluleAdj = c;
+        }
+
+    }
+    if(test1>test2 && test1>test3 && test1>test4){
+        console.log('case du bas');
+        var c = {'x' : cellule.x, 'y' :cellule.y+1};
+        if(p.casesDispoPersonnage[c.x+'_'+ c.y]==true || (p.x==c.x && p.y==c.y)){
+            celluleAdj = c;
+        }
+    }
+    if(test3<test4 && test3<test1 && test3<test2){
+        console.log('case gauche');
+        var c = {'x' : cellule.x-1, 'y' :cellule.y};
+        if(p.casesDispoPersonnage[c.x+'_'+ c.y]==true || (p.x==c.x && p.y==c.y)){
+            celluleAdj = c;
+        }
+    }
+    if(test3>test4 && test3>test1 && test3>test2){
+        console.log('case droite');
+        var c = {'x' : cellule.x+1, 'y' :cellule.y};
+        if(p.casesDispoPersonnage[c.x+'_'+ c.y]==true || (p.x==c.x && p.y==c.y)){
+            celluleAdj = c;
+        }
+    }
+    return celluleAdj;
 }
 // test l etat de la case
     Map.prototype.isCaseDisponible = function(celule){
@@ -185,8 +246,9 @@ Map.prototype.getManathanResult = function(cellule,caseDesti){
     //var result = (xb-xa)+(yb-ya);
 }
 // test algo chemin
-Map.prototype.getTabRoute = function(cases,personnage,caseDesti){
-     tabPoids = {};
+Map.prototype.getTabRoute = function(personnage,caseDesti){
+    var cases = personnage.casesDispoPersonnage;
+    var tabPoids = {};
     var antecedant =  {};
     var keyFinal = caseDesti.x+'_'+caseDesti.y;
     var keyD = personnage.x+'_'+personnage.y;
