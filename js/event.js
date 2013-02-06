@@ -26,11 +26,12 @@ $(document).ready(function() {
             var cellule = map.getCase(mouseX,mouseY);
             var enemy =  JOUEURS[TURN].getMyEnemy(cellule);
             if(personnageSelected && enemy!=false && enemy.isPorteDattaque(personnageSelected)){
-                enemySelected = enemy;
+               // enemySelected = enemy;
                 var cellule = map.getCaseAdjacenteSelectionne(mouseX,mouseY,cellule,personnageSelected);
             }
+            else enemySelected = false;
             if(cellule!=null){
-                JOUEURS[TURN].traitementClick(cellule,enemySelected);
+                JOUEURS[TURN].traitementClick(cellule,enemy);
 
             }
 

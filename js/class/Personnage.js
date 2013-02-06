@@ -9,7 +9,7 @@ var DUREE_ANIMATION = 5;
 var DUREE_DEPLACEMENT = 15;
 var joueur = null;
 var casesDispoPersonnage = null;
-function Personnage(url, x, y, direction,id,nom,nbcase) {
+function Personnage(url, x, y, direction,id,nom,nbcase,pv) {
     this.x = x; // (en cases)
     this.y = y; // (en cases)
     this.direction = direction;
@@ -17,6 +17,7 @@ function Personnage(url, x, y, direction,id,nom,nbcase) {
     this.nextDep = 0;
     this.etatAnimation = -1;
     this.nom = nom;
+    this.pdv = pv;
     this.id =id;////////////////;
     this.nbMaxCaseDeplacement = nbcase;
     // Chargement de l'image dans l'attribut image
@@ -55,6 +56,13 @@ Personnage.prototype.isPorteDattaque = function(moi){
     }
     return false;
 }
+// dessiner point de vie
+Personnage.prototype.dessinerVie = function(context) {
+    context.fillStyle = "rgba(255, 255, 255, 1)";
+    context.font = "bold 15px Arial";//On passe à l'attribut "font" de l'objet context une simple chaîne de caractères composé de la taille de la police, puis de son nom.
+    context.fillText(this.pdv, this.x*32,this.y*32+15); // car le font fait 15px
+}
+// desinner personnage
 Personnage.prototype.dessinerPersonnage = function(context) {
     var frame = 0; // Numero de l'image Ã  prendre pour l'animation
     var decalageX = 0, decalageY = 0; // Decalage a  appliquer a  la position du personnage
@@ -92,7 +100,7 @@ Personnage.prototype.dessinerPersonnage = function(context) {
      * donc il nous suffit de garder les valeurs 0 pour les variables
      * frame, decalageX et decalageY
      */
-
+    //perso
     context.drawImage(
         this.image,
         this.largeur * frame, this.direction * this.hauteur, // Point d'origine du rectangle source Ã  prendre dans notre image
@@ -101,6 +109,10 @@ Personnage.prototype.dessinerPersonnage = function(context) {
         (this.x * 32) - (this.largeur / 2) + 16+ decalageX, (this.y * 32) - this.hauteur + 32 + decalageY,
         this.largeur, this.hauteur // Taille du rectangle destination (c'est la taille du personnage)
     );
+    //vie
+    context.fillStyle = "rgba(255, 255, 255, 1)";
+    context.font = "bold 15px Arial";//On passe à l'attribut "font" de l'objet context une simple chaîne de caractères composé de la taille de la police, puis de son nom.
+    context.fillText(this.pdv, this.x*32+decalageX,this.y*32+15+decalageY); // + 15 car la font = 15px;
 }
 
 Personnage.prototype.getCoordonneesAdjacentes = function(direction) {
@@ -143,7 +155,7 @@ Personnage.prototype.getDirection = function(caseTo) {
 Personnage.prototype.setNbDepAeffectuer = function(cases){
     this.maxDep = cases.length-1;
 }
-Personnage.prototype.deplacement = function(cases,callback){
+Personnage.prototype.deplacement = function(cases,callback,enemy){
     if(this.etatAnimation >= 0 ) {
         return false;
     }
@@ -152,8 +164,7 @@ Personnage.prototype.deplacement = function(cases,callback){
         clearInterval(idInterval);
         this.nextDep = 0;
         this.maxDep = null;
-        personnageSelected = false;
-        callback();
+        callback(enemy);
         return false;
 
     }

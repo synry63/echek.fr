@@ -29,7 +29,9 @@ function Map(nom) {
 Map.prototype.killPerso = function(p){
     for(var i = 0, l = this.personnages.length ; i < l ; i++) {
         if(this.personnages[i]==p){
-            this.personnages.splice(i,1);
+            this.personnages[i].pdv-=2;
+            if(this.personnages[i].pdv<=0) this.personnages.splice(i,1);
+
         }
     }
 }
@@ -56,6 +58,8 @@ Map.prototype.dessinerMap = function(context) {
     for(var i = 0, l = this.personnages.length ; i < l ; i++) {
         this.personnages[i].dessinerPersonnage(context);
     }
+
+
 }
 Map.prototype.dessinerCasesDepPossible = function(context,cases) {
     context.fillStyle = "rgba(46, 184, 0, 0.5)";

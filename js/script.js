@@ -9,7 +9,7 @@ function log(msg){
 var canvas;
 var ctx;
 var personnageSelected = false;
-var enemySelected = false;
+//var enemySelected = false;
 var celluleOver = null;
 var FINTOUR = true;
 var JOUEURS = new Array(2);
@@ -24,9 +24,9 @@ JOUEURS[1] = joueur2;
 
 // pose des perso sur la map
 for (var i=5;i<15;i++){
-    var pJ1 = new Personnage("chavalier rang 1.png",i, 14, DIRECTION.HAUT,'SOLDAT_RANG1','soldat',2);
+    var pJ1 = new Personnage("chavalier rang 1.png",i, 14, DIRECTION.HAUT,'SOLDAT_RANG1','soldat',2,10);
     pJ1.setJoueur(joueur);
-    var pJ2 = new Personnage("chavalier rang 1.png",i, 0, DIRECTION.BAS,'SOLDAT_RANG1','soldat',2);
+    var pJ2 = new Personnage("chavalier rang 1.png",i, 0, DIRECTION.BAS,'SOLDAT_RANG1','soldat',2,10);
     pJ2.setJoueur(joueur2);
     joueur.addPersonnage(pJ1);
     joueur2.addPersonnage(pJ2);

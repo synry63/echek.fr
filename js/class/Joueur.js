@@ -35,30 +35,32 @@ Joueur.prototype.traitementClick = function(cellule,enemy) {
                 personnageSelected.setNbDepAeffectuer(arrayRoute);
                 var t = this;
                 idInterval =  setInterval(function() {
-                    personnageSelected.deplacement(arrayRoute,t.test);
+                    personnageSelected.deplacement(arrayRoute,t.traitementAttaque,enemy);
                 },0);
 
             personnageSelected.casesDispoPersonnage = null;
-
             }
+            else if(enemy) this.traitementAttaque(enemy);
+
 
     }
     // selection d un de mes personnages
-    if(result==false){
-        personnageSelected = this.getMyPerso(cellule);
-        if(personnageSelected!=false){
+       var  temp_personnageSelected = this.getMyPerso(cellule);
+        if(temp_personnageSelected!=false && temp_personnageSelected.etatAnimation==-1  && enemy==false){
+            personnageSelected = temp_personnageSelected;
             var casesDispo= this.map.getTabDisponible(personnageSelected);
             personnageSelected.casesDispoPersonnage = casesDispo;
         }
-    }
+    //}
 
 }
-Joueur.prototype.test = function(){
-    if(enemySelected){
-        this.map.killPerso(enemySelected);
+Joueur.prototype.traitementAttaque = function(enemy){
+    if(enemy){
+        this.map.killPerso(enemy);
     }
     if(TURN==0) TURN = 1;
     else TURN = 0;
+    personnageSelected = false;
 }
 Joueur.prototype.getMyEnemy = function (cellule){
     var tempP =  map.getPerso(cellule);
