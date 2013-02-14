@@ -25,7 +25,7 @@ Joueur.prototype.traitementClavier = function(event) {
         personnageSelected = false;
     }
 }
-Joueur.prototype.traitementClick = function(cellule,enemy) {
+Joueur.prototype.traitementClick = function(cellule) {
 
     var result = false;
        if(personnageSelected.casesDispoPersonnage!=null){
@@ -33,26 +33,27 @@ Joueur.prototype.traitementClick = function(cellule,enemy) {
             if(result) {
                 var arrayRoute = map.getTabRoute(personnageSelected,cellule);
                 personnageSelected.setNbDepAeffectuer(arrayRoute);
-                var t = this;
-                idInterval =  setInterval(function() {
-                    personnageSelected.deplacement(arrayRoute,t.traitementAttaque,enemy);
-                },0);
+                return arrayRoute;
+              //  var t = this;
+              /*  idInterval =  setInterval(function() {
+                    personnageSelected.deplacement(arrayRoute);
+                },0);*/
 
-            personnageSelected.casesDispoPersonnage = null;
+            //personnageSelected.casesDispoPersonnage = null;
             }
-            else if(enemy) this.traitementAttaque(enemy);
+            //else if(enemy) this.traitementAttaque(enemy);
 
 
     }
     // selection d un de mes personnages
        var  temp_personnageSelected = this.getMyPerso(cellule);
-        if(temp_personnageSelected!=false && temp_personnageSelected.etatAnimation==-1  && enemy==false){
+        if(temp_personnageSelected!=false && temp_personnageSelected.etatAnimation==-1){
             personnageSelected = temp_personnageSelected;
             var casesDispo= this.map.getTabDisponible(personnageSelected);
             personnageSelected.casesDispoPersonnage = casesDispo;
         }
     //}
-
+return null;
 }
 Joueur.prototype.traitementAttaque = function(enemy){
     if(enemy){

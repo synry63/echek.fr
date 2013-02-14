@@ -155,7 +155,7 @@ Personnage.prototype.getDirection = function(caseTo) {
 Personnage.prototype.setNbDepAeffectuer = function(cases){
     this.maxDep = cases.length-1;
 }
-Personnage.prototype.deplacement = function(cases,callback,enemy){
+Personnage.prototype.deplacement = function(cases){
     if(this.etatAnimation >= 0 ) {
         return false;
     }
@@ -164,7 +164,7 @@ Personnage.prototype.deplacement = function(cases,callback,enemy){
         clearInterval(idInterval);
         this.nextDep = 0;
         this.maxDep = null;
-        callback(enemy);
+        //callback(enemy);
         return false;
 
     }

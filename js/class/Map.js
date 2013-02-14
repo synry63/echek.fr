@@ -176,7 +176,15 @@ Map.prototype.getPerso = function(celule){
     }
     return false;
 }
-
+// recupere le personnage selectionne
+Map.prototype.getPersoByID = function(id){
+    for(var i = 0; i < this.personnages.length ; i++) {
+        if(id==this.personnages[i].id){
+            return this.personnages[i];
+        }
+    }
+    return null;
+}
 // recupere toutes les cellules dispo du perso
 Map.prototype.getTabDisponible = function(personnage){
    // var arrayR = new Array();
